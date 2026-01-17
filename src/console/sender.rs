@@ -2,7 +2,7 @@ use std::fmt::{Display, Formatter};
 use std::{fmt, io};
 use std::cell::RefCell;
 use std::sync::Arc;
-use crate::console::component::ConsoleSendable;
+use crate::console::component::ConsoleComponent;
 use crate::console::{Component, ConsoleMessage};
 use crate::console::receiver::Console;
 use std::io::{Write};
@@ -30,9 +30,9 @@ impl Add<&str> for &MessageEntry {
     }
 }
 
-impl Add<Box<dyn ConsoleSendable>> for ConsoleMessage {
+impl Add<Box<dyn ConsoleComponent>> for ConsoleMessage {
     type Output = ConsoleMessage;
-    fn add(mut self, component: Box<dyn ConsoleSendable>) -> Self::Output {
+    fn add(mut self, component: Box<dyn ConsoleComponent>) -> Self::Output {
         self.parts.push(component);
         self
     }
@@ -44,24 +44,24 @@ impl fmt::Display for MessageEntry {
     }
 }
 
-impl ConsoleSendable for MessageEntry {
+impl ConsoleComponent for MessageEntry {
     fn is_message_marker(&self) -> bool {
         true
     }
-    fn clone_box(&self) -> Box<dyn ConsoleSendable> {
+    fn clone_box(&self) -> Box<dyn ConsoleComponent> {
         Box::new(self.clone())
     }
 }
 #[derive(Clone)]
 pub struct Stdout {
     inner: Arc<io::Stdout>,
-    end_parts: RefCell<Vec<Box<dyn ConsoleSendable>>>,
+    end_parts: RefCell<Vec<Box<dyn ConsoleComponent>>>,
     message_part: RefCell<Option<ConsoleMessage>>,
     formatter_fn: Option<Arc<dyn Fn(&MessageEntry) -> ConsoleMessage + Send + Sync>>,
 }
 
 impl Stdout {
-    pub fn init_format(&self, tag: Option<String>) -> (Vec<Box<dyn ConsoleSendable>>, bool) {
+    pub fn init_format(&self, tag: Option<String>) -> (Vec<Box<dyn ConsoleComponent>>, bool) {
         if let Some(formatter) = &self.formatter_fn {
             let entry = MessageEntry {
                 timestamp_ms:
@@ -114,7 +114,7 @@ where
 }
 
 impl Console for Stdout {
-    fn try_write<M: ConsoleSendable + 'static>(&self, component: M) -> io::Result<()> {
+    fn try_write<M: ConsoleComponent + 'static>(&self, component: M) -> io::Result<()> {
         let mut handle = self.inner.lock();
         // Borrow once and mutate in place to avoid nested borrowing panics.
         let mut slot = self.message_part.borrow_mut();

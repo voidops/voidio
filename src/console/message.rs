@@ -1,9 +1,9 @@
 use std::fmt;
-use crate::console::ConsoleSendable;
+use crate::console::ConsoleComponent;
 
 #[derive(Clone)]
 pub struct ConsoleMessage {
-    pub(crate) parts: Vec<Box<dyn ConsoleSendable>>,
+    pub(crate) parts: Vec<Box<dyn ConsoleComponent>>,
 }
 
 impl ConsoleMessage {
@@ -12,14 +12,14 @@ impl ConsoleMessage {
             parts: Vec::new(),
         }
     }
-    pub fn push(&mut self, component: Box<dyn ConsoleSendable>) {
+    pub fn push(&mut self, component: Box<dyn ConsoleComponent>) {
         self.parts.push(component);
     }
-    pub fn add<C: ConsoleSendable + 'static>(&mut self, component: C) {
+    pub fn add<C: ConsoleComponent + 'static>(&mut self, component: C) {
         self.parts.push(Box::new(component));
     }
 
-    pub fn add_ref(&mut self, component: &dyn ConsoleSendable) {
+    pub fn add_ref(&mut self, component: &dyn ConsoleComponent) {
         self.parts.push(component.clone_box());
     }
 }
@@ -33,8 +33,8 @@ impl fmt::Display for ConsoleMessage {
     }
 }
 
-impl ConsoleSendable for ConsoleMessage {
-    fn clone_box(&self) -> Box<dyn ConsoleSendable> {
+impl ConsoleComponent for ConsoleMessage {
+    fn clone_box(&self) -> Box<dyn ConsoleComponent> {
         let mut message = ConsoleMessage::new();
         for part in &self.parts {
             message.add_ref(part);
@@ -43,21 +43,21 @@ impl ConsoleSendable for ConsoleMessage {
     }
 }
 
-impl ConsoleSendable for Box<dyn ConsoleSendable> {
+impl ConsoleComponent for Box<dyn ConsoleComponent> {
 
     fn is_message_marker(&self) -> bool {
         (**self).is_message_marker()
     }
 
-    fn clone_box(&self) -> Box<dyn ConsoleSendable> {
+    fn clone_box(&self) -> Box<dyn ConsoleComponent> {
         (**self).clone_box()
     }
 }
 
-impl std::ops::Add<&dyn ConsoleSendable> for ConsoleMessage {
+impl std::ops::Add<&dyn ConsoleComponent> for ConsoleMessage {
     type Output = ConsoleMessage;
 
-    fn add(mut self, other: &dyn ConsoleSendable) -> Self::Output {
+    fn add(mut self, other: &dyn ConsoleComponent) -> Self::Output {
         self.add_ref(other);
         self
     }

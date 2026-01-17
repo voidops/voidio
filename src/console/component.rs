@@ -2,13 +2,13 @@ use std::{fmt};
 use std::any::Any;
 use crate::console::ConsoleMessage;
 
-pub trait ConsoleSendable: fmt::Display {
+pub trait ConsoleComponent: fmt::Display {
     fn is_message_marker(&self) -> bool {
         false
     }
-    fn clone_box(&self) -> Box<dyn ConsoleSendable>;
+    fn clone_box(&self) -> Box<dyn ConsoleComponent>;
 }
-impl Clone for Box<dyn ConsoleSendable> {
+impl Clone for Box<dyn ConsoleComponent> {
     fn clone(&self) -> Self {
         self.clone_box()
     }

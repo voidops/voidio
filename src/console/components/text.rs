@@ -1,5 +1,5 @@
 use std::{fmt, ops};
-use crate::console::{Component, ConsoleMessage, ConsoleSendable};
+use crate::console::{Component, ConsoleMessage, ConsoleComponent};
 
 fn rgba_to_ansi(rgba: u32) -> String {
     let r = (rgba >> 16) & 0xFF;
@@ -37,14 +37,14 @@ impl fmt::Display for TextComponent {
     }
 }
 
-impl ConsoleSendable for TextComponent {
-    fn clone_box(&self) -> Box<dyn ConsoleSendable> {
+impl ConsoleComponent for TextComponent {
+    fn clone_box(&self) -> Box<dyn ConsoleComponent> {
         Box::new(self.clone())
     }
 }
 
-impl ConsoleSendable for String {
-    fn clone_box(&self) -> Box<dyn ConsoleSendable> {
+impl ConsoleComponent for String {
+    fn clone_box(&self) -> Box<dyn ConsoleComponent> {
         Box::new(self.clone())
     }
 }
