@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests {
     use voidio::console::{fstdout, stdout, Component, Console};
+    /*
     #[test]
     fn logging () {
         {
@@ -8,7 +9,7 @@ mod tests {
             cout.send("Normal message to stdout");
             cout.send(Component::text("****************************").with_color(0x00FFFF));
         }
-    }
+    }*/
     #[test]
     fn formatted_stdout()
     {

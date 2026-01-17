@@ -12,7 +12,9 @@ impl ConsoleMessage {
             parts: Vec::new(),
         }
     }
-
+    pub fn push(&mut self, component: Box<dyn ConsoleSendable>) {
+        self.parts.push(component);
+    }
     pub fn add<C: ConsoleSendable + 'static>(&mut self, component: C) {
         self.parts.push(Box::new(component));
     }
