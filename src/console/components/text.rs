@@ -73,6 +73,13 @@ impl ops::Add<&str> for ConsoleMessage {
         self
     }
 }
+impl ops::Add<String> for ConsoleMessage {
+    type Output = ConsoleMessage;
+    fn add(mut self, other: String) -> Self::Output {
+        self.add_ref(&Component::text(&other));
+        self
+    }
+}
 
 impl ops::Add<TextComponent> for ConsoleMessage {
     type Output = ConsoleMessage;
