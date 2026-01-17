@@ -1,0 +1,25 @@
+[package]
+name = "voidio"
+version = "0.1.10"
+edition = "2021"
+description = "VOID I/O - High-performance Cross-platform I/O for Rust."
+license = "MIT"
+repository = "https://github.com/voidops/voidio"
+homepage = "https://github.com/voidops/voidio"
+documentation = "https://docs.rs/voidio"
+readme = "README.md"
+
+[dependencies]
+aes = "0.8.4"
+ring = "0.17.14"
+sha2 = "0.10.9"
+stable-vec = "0.4.1"
+rustls = { version = "0.23.35", default-features = false, features = ["ring"] }
+rustls-native-certs = "0.8.2"
+futures = "0.3.31"
+rand = "0.9.2"
+webpki-roots = "1.0.4"
+
+[dev-dependencies]
+quinn = { version = "0.11.9", features = ["rustls"] }
+tokio = { version = "1.28.2", features = ["full"] }
