@@ -65,6 +65,15 @@ impl ops::Add<TextComponent> for &str {
         message
     }
 }
+impl ops::Add<TextComponent> for String {
+    type Output = ConsoleMessage;
+    fn add(self, other: TextComponent) -> Self::Output {
+        let mut message = ConsoleMessage::new();
+        message.add_ref(&self);
+        message.add_ref(&other);
+        message
+    }
+}
 
 impl ops::Add<&str> for ConsoleMessage {
     type Output = ConsoleMessage;
