@@ -11,7 +11,7 @@ use std::time::SystemTime;
 
 #[derive(Clone)]
 pub struct MessageEntry {
-    pub timestamp: u128,
+    pub timestamp_ms: u128,
     pub tag: Option<String>,
 }
 impl Add<&MessageEntry> for ConsoleMessage {
@@ -64,10 +64,8 @@ impl Stdout {
     pub fn init_format(&self, tag: Option<String>) -> (Vec<Box<dyn ConsoleSendable>>, bool) {
         if let Some(formatter) = &self.formatter_fn {
             let entry = MessageEntry {
-                timestamp:
-                SystemTime::now()
-                    .duration_since(SystemTime::UNIX_EPOCH)
-                    .unwrap().as_millis(),
+                timestamp_ms:
+                    SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_millis(),
                 tag,
             };
             let format = formatter(&entry);
