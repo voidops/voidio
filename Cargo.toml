@@ -1,6 +1,6 @@
 [package]
 name = "voidio"
-version = "0.1.11"
+version = "0.1.12"
 edition = "2021"
 description = "VOID I/O - High-performance Cross-platform I/O for Rust."
 license = "MIT"
